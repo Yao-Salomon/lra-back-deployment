@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  labpro:
+    image: dulcita/external:v0.0.1  # Your Jmix application image
+    volumes:
+      - ./application/files:/.jmix/work/filestorage
+      - ./application/config/application.properties:/home/app/config/application.properties
+      - ./application/logs:/.jmix/work/log
+    ports:
+      - "8080:8080"  # Expose app porst
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/lra_db  # Connect to the db service
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=ENbAV<PY&J7CBu
+    depends_on:
+      - db  # Ensure db starts before the app
+
+  db:
+    image: postgres:13  # PostgreSQL image
+    environment:
+      POSTGRES_DB: lra_db          # Initial database name
+      POSTGRES_USER: postgres       # User for the database
+      POSTGRES_PASSWORD: ENbAV<PY&J7CBu # Password for the user
+    ports:
+      - "5432:5432"  # Expose DB port if needed for local access
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data
+
+volumes:
+  postgres_data:  # Define volume for PostgreSQL data persistence
